@@ -41,10 +41,10 @@
           <v-container>
             <v-row>
               <v-col cols="12">
-                <v-text-field v-model="email" :rules="emailRules" label="Email*" v-validate="'required|email'"></v-text-field>
+                <v-text-field v-model="signupEmail" :rules="emailRules" label="Email*" v-validate="'required|email'"></v-text-field>
               </v-col>
               <v-col cols="12">
-                <v-text-field v-model="password" :rules="passwordRules" label="Password*" type="password" required></v-text-field>
+                <v-text-field v-model="signupPassword" :rules="passwordRules" label="Password*" type="password" required></v-text-field>
               </v-col>
               <v-col cols="12">
                 <v-text-field v-model="confirmPassword" :rules="confirmPasswordRules" label="Confirm Password*" type="password" required></v-text-field>
@@ -69,7 +69,10 @@
       dialog2: false,
       valid: false,
       email: '',
+      signupEmail: '',
       password: '',
+      confirmPassword: '',
+      signupPassword: '',
       emailRules: [
         v => !!v || 'E-mail is required',
         v => /.+@.+/.test(v) || 'E-mail must be valid'
@@ -78,6 +81,9 @@
         v => v.length >= 6 || 'Minimum length is 6 characters'
         // v => /.+@.+/.test(v) || 'E-mail must be valid',
       ],
-    }),
+      confirmPasswordRules:[
+        v => v.length >= 6 || 'Minimum length is 6 characters'
+      ]
+    })
   }
 </script>
