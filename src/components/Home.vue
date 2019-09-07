@@ -17,9 +17,6 @@
         </v-card-text>
         <Registration/>
       </v-card-title>
-      <!-- <v-card-text>
-        Your #1 Time Manager
-      </v-card-text> -->
     </v-img>
   </v-card>
 </template>
