@@ -16,17 +16,28 @@
             @keyup.enter="addTodo"
           ></v-text-field>
 
-          <!-- <v-flex class="mt-12 text-left" v-for="todo in todos" :key="todo.id">
-              <p class="text-left">{{ todo.title }}</p>
-              <i class="fa fa-times"></i>
-          </v-flex>-->
           <v-layout class="mt-5 text-left" v-for="(todo, index) in todos" :key="todo.id">
-            <v-flex v-if="!todo.editing" @dblclick="editTodo(todo)" class="text-left animated bounceInUp">
+            <v-flex>
+              <v-checkbox v-model="todo.completed"></v-checkbox>
+            </v-flex>
+            <v-flex
+              v-if="!todo.editing"
+              @dblclick="editTodo(todo)"
+              class="text-left animated bounceInUp"
+              :class="{ completed : todo.completed }"
+            >
               <p>{{ todo.title }}</p>
             </v-flex>
             <!-- <input v-else type="text" v-model="todo.title" /> -->
             <v-flex v-else>
-                <input type="text" v-model="todo.title" @blur="doneEditing(todo)" @keyup.enter="doneEditing(todo)"/>
+              <v-text-field
+                type="text"
+                v-model="todo.title"
+                @blur="doneEditing(todo)"
+                @keyup.enter="doneEditing(todo)"
+                @keyup.esc="cancelEditing(todo)"
+                v-focus
+              ></v-text-field>
             </v-flex>
             <v-flex class="text-right">
               <i @click="editTodo(todo)" class="primary--text fa fa-pen mr-5"></i>
@@ -45,21 +56,29 @@ export default {
   data: () => ({
     newTodo: "",
     idForTodo: 3,
+    beforeEditCache: "",
     todos: [
-        {
-            'id': 1,
-            'title': "yajnnb",
-            'completed': false,
-            'editing': false
-        },
-        {
-            'id': 2,
-            'title': "yolo",
-            'completed': false,
-            'editing': false
-        }
+      {
+        id: 1,
+        title: "yajnnb",
+        completed: false,
+        editing: false
+      },
+      {
+        id: 2,
+        title: "yolo",
+        completed: false,
+        editing: false
+      }
     ]
   }),
+  directives: {
+    focus: {
+      inserted: function(el) {
+        el.focus();
+      }
+    }
+  },
   methods: {
     addTodo() {
       if (this.newTodo.trim().length == 0) {
@@ -78,11 +97,19 @@ export default {
     removeTodo(index) {
       this.todos.splice(index, 1);
     },
-    editTodo(todo){
-        todo.editing = true;
+    editTodo(todo) {
+      this.beforeEditCache = todo.title;
+      todo.editing = true;
     },
-    doneEditing(todo){
-        todo.editing = false;
+    doneEditing(todo) {
+      if (todo.title.trim() == "") {
+        todo.title = this.beforeEditCache;
+      }
+      todo.editing = false;
+    },
+    cancelEditing(todo) {
+      todo.title = this.beforeEditCache;
+      todo.editing = false;
     }
   }
 };
@@ -98,5 +125,10 @@ export default {
     -webkit-transform: rotate(360deg);
     transform: rotate(360deg);
   }
+}
+
+.completed{
+    text-decoration: line-through;
+    color: grey;
 }
 </style>
