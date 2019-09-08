@@ -1,24 +1,29 @@
 <template>
   <v-container fluid class="my-8">
-    <v-flex>
-      <div class="text-center">
-        <v-avatar size="110">
-          <img class="logo" src="@/assets/logo.png" alt="avatar" />
-        </v-avatar>
-      </div>
-    </v-flex>
     <v-row>
-      <v-col cols="12" md="6">
-        <v-sheet elevation="2" class="pa-12">
+      <v-col cols="12">
+        <v-sheet elevation="5" class="pa-12 ma-auto">
           <v-text-field
             placeholder="What needs to be done"
             v-model="newTodo"
             @keyup.enter="addTodo"
           ></v-text-field>
 
-          <v-layout class="mt-5 text-left" v-for="(todo, index) in todos" :key="todo.id">
+          <v-layout class="extra-container" wrap row>
+            <v-flex >
+              <input name="checkAll" type="checkbox" :checked="!anyRemaining" @change="checkAllTodos"/>
+              <label for="checkAll">Check All</label>
+            </v-flex>
+            <v-flex class="text-right">
+              <div>{{ remaining }} items left</div>
+            </v-flex>
+          </v-layout>
+
+
+
+          <v-layout row wrap class="container text-left" v-for="(todo, index) in todos" :key="todo.id">
             <v-flex>
-              <v-checkbox v-model="todo.completed"></v-checkbox>
+              <input type="checkbox" v-model="todo.completed"/>
             </v-flex>
             <v-flex
               v-if="!todo.editing"
@@ -28,7 +33,6 @@
             >
               <p>{{ todo.title }}</p>
             </v-flex>
-            <!-- <input v-else type="text" v-model="todo.title" /> -->
             <v-flex v-else>
               <v-text-field
                 type="text"
@@ -54,24 +58,33 @@
 <script>
 export default {
   data: () => ({
+    bottomNav: "recent",
     newTodo: "",
     idForTodo: 3,
     beforeEditCache: "",
     todos: [
       {
         id: 1,
-        title: "yajnnb",
+        title: "Watch Football",
         completed: false,
         editing: false
       },
       {
         id: 2,
-        title: "yolo",
+        title: "Go out for a walk",
         completed: false,
         editing: false
       }
     ]
   }),
+  computed:{
+    remaining(){
+      return this.todos.filter(todo => !todo.completed).length
+    },
+    anyRemaining(){
+      return this.remaining != 0
+    }
+  },
   directives: {
     focus: {
       inserted: function(el) {
@@ -91,44 +104,47 @@ export default {
         completed: false
       });
 
-      this.newTodo = "";
-      this.idForTodo++;
-    },
-    removeTodo(index) {
-      this.todos.splice(index, 1);
+      this.newTodo = ''
+      this.idForTodo++
     },
     editTodo(todo) {
       this.beforeEditCache = todo.title;
       todo.editing = true;
     },
     doneEditing(todo) {
-      if (todo.title.trim() == "") {
+      if (todo.title.trim() == '') {
         todo.title = this.beforeEditCache;
       }
-      todo.editing = false;
+      todo.editing = false
     },
     cancelEditing(todo) {
       todo.title = this.beforeEditCache;
       todo.editing = false;
+    },
+    removeTodo(index) {
+      this.todos.splice(index, 1)
+    },
+    checkAllTodos(){
+      this.todos.forEach((todo) => todo.completed = event.target.checked)
     }
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>
-.logo {
-  position: absolute;
-  animation: spin 4s linear infinite;
+.completed {
+  text-decoration: line-through;
+  color: grey;
 }
-@keyframes spin {
-  100% {
-    -webkit-transform: rotate(360deg);
-    transform: rotate(360deg);
-  }
+.extra-container{
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 14px;
 }
-
-.completed{
-    text-decoration: line-through;
-    color: grey;
+.container{
+  display: flex;
+  align-items: center;
+  justify-content: start;
 }
 </style>
