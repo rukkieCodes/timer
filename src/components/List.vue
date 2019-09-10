@@ -19,16 +19,31 @@
             </v-flex>
           </v-layout>
 
+          <v-layout class="extra-container" wrap row>
+            <v-flex >
+              <v-btn class="button" :class="{ active: filter == 'all' }" @click="filter = 'all'">All</v-btn>
+            </v-flex>
+            <v-flex class="text-right">
+              <v-btn class="button" :class="{ active: filter == 'active' }" @click="filter = 'active'">Active</v-btn>
+            </v-flex>
+            <v-flex>
+              <v-btn class="button" :class="{ active: filter == 'completed' }" @click="filter = 'completed'">Completed</v-btn>
+            </v-flex>
+            <v-flex>
+              <v-btn v-if="showClearCompletedButton" @click="clearCompleted">Clear Completed</v-btn>
+            </v-flex>
+          </v-layout>
 
 
-          <v-layout row wrap class="container text-left" v-for="(todo, index) in todos" :key="todo.id">
+
+          <v-layout row wrap class="container text-left" v-for="(todo, index) in todosFilted" :key="todo.id">
             <v-flex>
               <input type="checkbox" v-model="todo.completed"/>
             </v-flex>
             <v-flex
               v-if="!todo.editing"
               @dblclick="editTodo(todo)"
-              class="text-left animated bounceInUp"
+              class="text-left"
               :class="{ completed : todo.completed }"
             >
               <p>{{ todo.title }}</p>
@@ -62,6 +77,7 @@ export default {
     newTodo: "",
     idForTodo: 3,
     beforeEditCache: "",
+    filter: 'all',
     todos: [
       {
         id: 1,
@@ -83,6 +99,20 @@ export default {
     },
     anyRemaining(){
       return this.remaining != 0
+    },
+    todosFilted(){
+      if(this.filter == 'all'){
+        return this.todos
+      }else if(this.filter == 'active'){
+        return this.todos.filter(todo => !todo.completed)
+      }else if(this.filter == 'completed'){
+        return this.todos.filter(todo => todo.completed)
+      }
+
+      return this.todos
+    },
+    showClearCompletedButton(){
+      return this.todos.filter(todo => todo.completed).length > 0
     }
   },
   directives: {
@@ -126,6 +156,9 @@ export default {
     },
     checkAllTodos(){
       this.todos.forEach((todo) => todo.completed = event.target.checked)
+    },
+    clearCompleted(){
+      this.todos = this.todos.filter(todo => !todo.completed)
     }
   }
 }
@@ -146,5 +179,22 @@ export default {
   display: flex;
   align-items: center;
   justify-content: start;
+}
+.button{
+  font-size: 14px;
+  background: #fff;
+  appearance: none;
+
+  &:hover{
+    background: lightgreen;
+  }
+
+  &:focus{
+    outline: none;
+  }
+}
+
+.active{
+  background: lightgreen;
 }
 </style>
