@@ -1,21 +1,23 @@
 <template>
-  <v-layout>
+  <v-container>
+    <div>
       <v-flex>
-          <Nav/>
+        <Nav />
       </v-flex>
       <v-flex>
-          <List/>
+        <List />
       </v-flex>
-  </v-layout>
+    </div>
+  </v-container>
 </template>
 
 <script>
-import Nav from "../components/Nav"
-import List from "../components/List"
+import Nav from "../components/Nav";
+import List from "../components/List";
 export default {
-    components:{
-        Nav,
-        List
-    }
-}
+  components: {
+    Nav,
+    List
+  }
+};
 </script>

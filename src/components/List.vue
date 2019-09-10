@@ -1,6 +1,6 @@
 <template>
-  <v-container class="mt-5 container">
-    <v-layout class="todoForm" row wrap>
+  <v-container class="mt-5 container justify-center">
+    <v-layout row wrap>
       <v-flex xs12 sm12 md12 lg12 xl12>
         <v-text-field placeholder="What needs to be done" v-model="newTodo" @keyup.enter="addTodo"></v-text-field>
       </v-flex>
@@ -52,11 +52,6 @@
         <input type="checkbox" v-model="todo.completed" />
       </v-flex>
       <v-flex
-        xs12
-        sm12
-        md12
-        lg4
-        xl12
         v-if="!todo.editing"
         @dblclick="editTodo(todo)"
         :class="{ completed : todo.completed }"
