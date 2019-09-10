@@ -1,12 +1,12 @@
 <template>
-  <v-layoyt>
+  <v-layout>
       <v-flex>
           <Nav/>
       </v-flex>
       <v-flex>
           <List/>
       </v-flex>
-  </v-layoyt>
+  </v-layout>
 </template>
 
 <script>
